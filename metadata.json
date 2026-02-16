@@ -1,0 +1,6 @@
+
+{
+  "name": "AI Trade Predictor",
+  "description": "An advanced AI-powered cryptocurrency price prediction platform with Telegram Mini App integration and Web3 subscription management.",
+  "requestFramePermissions": ["camera", "microphone"]
+}

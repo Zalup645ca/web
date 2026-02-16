@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Pulse AI: Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tg-theme-bg-color: #050508;
+            --primary: #AB9FF2;
+            --secondary: #7E61E7;
+            --neon-cyan: #00f2ff;
+            --neon-pink: #ff00ea;
+            --neon-green: #39ff14;
+            --neon-red: #ff3131;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--tg-theme-bg-color);
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass {
+            background: rgba(13, 13, 18, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(171, 159, 242, 0.15);
+        }
+        .phantom-gradient { background: linear-gradient(135deg, #AB9FF2 0%, #7E61E7 100%); }
+        .tab-active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        
+        /* Smooth Roulette Easing */
+        .wheel-spinning {
+            transition: transform 6s cubic-bezier(0.15, 0, 0, 1);
+        }
+
+        /* Story Preview Animation */
+        .story-image-pulse {
+            animation: borderPulse 3s infinite;
+        }
+        @keyframes borderPulse {
+            0% { border-color: rgba(236, 72, 153, 0.3); box-shadow: 0 0 0px rgba(236, 72, 153, 0); }
+            50% { border-color: rgba(236, 72, 153, 0.8); box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
+            100% { border-color: rgba(236, 72, 153, 0.3); box-shadow: 0 0 0px rgba(236, 72, 153, 0); }
+        }
+
+        /* Twitch-style Chat Feed */
+        .chat-feed-scroll {
+            display: flex;
+            flex-direction: column-reverse;
+            overflow-y: hidden;
+            height: 100%;
+        }
+        .chat-item {
+            animation: chatSlideIn 0.2s ease-out forwards;
+            padding: 4px 8px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+        }
+        @keyframes chatSlideIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "recharts": "https://esm.sh/recharts@^3.7.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.475.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
