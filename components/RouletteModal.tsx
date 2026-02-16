@@ -27,52 +27,51 @@ const RouletteModal: React.FC<RouletteModalProps> = ({ onClose, onWin }) => {
   const [showPayButton, setShowPayButton] = useState(false);
 
   const handleSpin = () => {
-    if (isSpinning) return;
-    
-    const tg = (window as any).Telegram?.WebApp;
-    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+  if (isSpinning) return;
 
-    setIsSpinning(true);
-    setMessage("ROLLING THE MATRIX...");
+  const tg = (window as any).Telegram?.WebApp;
+  tg?.HapticFeedback?.impactOccurred('heavy');
 
-    // Rotation calculation
-    // Base: 5 full turns (1800 deg)
-    // If not paid, target "LOSER" (Index 0) -> Angle 0
-    // If paid, target "JACKPOT" (Index 3) -> Angle 135 (3 * 45)
-    
-    const extraTurns = 1800 + (360 * 3); // 8 full turns
-    let finalAngle = 0;
-    
+  setIsSpinning(true);
+  setMessage("ROLLING THE MATRIX...");
+
+  const fullSpins = 360 * 8; // 8 оборотов
+  const segmentAngle = 360 / prizes.length; // 45°
+
+  let targetIndex = 0;
+
+  if (hasPaid) {
+    targetIndex = 3; // JACKPOT
+  } else {
+    targetIndex = 0; // LOSER
+  }
+
+  // центр сегмента
+  const targetAngle =
+    360 - (targetIndex * segmentAngle + segmentAngle / 2);
+
+  const finalRotation = fullSpins + targetAngle;
+
+  setRotation(finalRotation);
+
+  setTimeout(() => {
+    setIsSpinning(false);
+    setSpinCount(prev => prev + 1);
+
     if (!hasPaid) {
-      finalAngle = extraTurns + 0; // Lands on Loser
+      setMessage("SECTOR: EMPTY. RECHARGE REQUIRED.");
+      setShowPayButton(true);
+      tg?.HapticFeedback?.notificationOccurred('error');
     } else {
-      // Land precisely on Jackpot (Index 3)
-      // The needle is at the top (0 deg). 
-      // To get index 3 to the top, we rotate the wheel such that index 3 segment is at 0.
-      // Index 0 is at 0-45. Index 3 is at 135-180.
-      // We want the MIDDLE of the segment (Index 3) to be at 0.
-      // Middle of Index 3 is at 157.5 deg.
-      // So rotation should be 360 - 157.5 = 202.5
-      finalAngle = extraTurns + 202.5; 
+      setMessage("CRITICAL HIT! ACCESS GRANTED.");
+      tg?.HapticFeedback?.notificationOccurred('success');
+
+      setTimeout(() => {
+        onWin('annual');
+      }, 2000);
     }
-
-    setRotation(finalAngle);
-
-    setTimeout(() => {
-      setIsSpinning(false);
-      setSpinCount(prev => prev + 1);
-      
-      if (!hasPaid) {
-        setMessage("SECTOR: EMPTY. RECHARGE REQUIRED.");
-        setShowPayButton(true);
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-      } else {
-        setMessage("CRITICAL HIT! ACCESS GRANTED.");
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        setTimeout(() => onWin('annual'), 2000);
-      }
-    , 6000);
-  };
+  }, 6000);
+};
 
   const handlePayTon = () => {
     const tg = (window as any).Telegram?.WebApp;
